@@ -1,0 +1,72 @@
+<div class="p-5 vh-100 hero-main" >
+  <div class="row">
+    <div class="container bg-white shadow-lg px-4 py-3 col-9 rounded-4">
+      <div class="row">
+        <h2 class="pb-3 px-4 col-11" *ngIf="!sent">Dodaj novi dokument</h2>
+        <h2 class="pb-3 px-4 col-11">Da li su podaci ispravni?</h2>
+      </div>
+      <div>
+        <div *ngIf="!sent">
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="flexRadioDefault"  (change)="selected='Zakon'" id="flexRadioDefault1" checked>
+            <label class="form-check-label" for="flexRadioDefault1">
+              Zakon
+            </label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="flexRadioDefault"  (change)="selected='Ugovor'" id="flexRadioDefault2">
+            <label class="form-check-label" for="flexRadioDefault2">
+              Ugovor
+            </label>
+          </div>
+          <div class="py-5">
+            <label for="formFile" class="form-label">Default file input example</label>
+            <input class="form-control" type="file" id="formFile" accept=".pdf" (change)="fileUpload($event.target)">
+          </div>
+          <div class="row">
+            <button type="button" class="btn btn-lg" style="background-color: lightskyblue;color: white" (click)="sendFile()">Send</button>
+          </div>
+        </div>
+
+
+        <div class="row p-3" *ngIf="sent">
+          <div class="form-group col-5">
+            <label for="ime">Ime zaposlenog</label>
+            <input type="text" class="form-control" id="ime" name="ime">
+          </div>
+          <div class="col-1"></div>
+          <div class="form-group col-5">
+            <label for="prezime">Prezime zaposlenog</label>
+            <input type="text" class="form-control" id="prezime" name="prezime">
+          </div>
+          <div class="form-group col-5 pt-3">
+            <label for="naziv">Naziv uprave</label>
+            <input type="text" class="form-control" id="naziv" name="naziv">
+          </div>
+          <div class="col-1"></div>
+          <div class="form-group col-5 pt-3">
+            <label for="nivo">Nivo uprave</label>
+            <input type="text" class="form-control" id="nivo" name="nivo">
+          </div>
+          <div class="form-group col-5 pt-3">
+            <label for="naslov">Naslov</label>
+            <input type="text" class="form-control" id="naslov" name="naslov">
+          </div>
+          <div class="col-1"></div>
+          <div class="form-group col-5 pt-3">
+            <label for="adresa">Adresa</label>
+            <input type="text" class="form-control" id="adresa" name="adresa">
+          </div>
+          <div class="form-group col-11 pt-3">
+            <label for="sadrzaj">Sadrzaj</label>
+            <textarea type="text" class="form-control" id="sadrzaj" name="sadrzaj"></textarea>
+          </div>
+          <div class="row pt-4">
+            <button type="button" class="btn btn-lg" style="background-color: lightskyblue;color: white">Confirm</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>

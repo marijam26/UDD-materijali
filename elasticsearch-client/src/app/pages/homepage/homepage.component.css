@@ -1,0 +1,14 @@
+.hero-main{
+  background-attachment: fixed;
+  background: linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.075),
+    rgba(0, 0, 0, 0.582),
+    rgba(0, 0, 0, 0.800)
+  ), url('https://images.unsplash.com/photo-1464618663641-bbdd760ae84a?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
+  background-size: cover;
+  background-repeat: no-repeat;
+  height: fit-content;
+  width: 100%;
+  opacity: 1;
+}
