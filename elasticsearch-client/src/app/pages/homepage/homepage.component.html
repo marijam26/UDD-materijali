@@ -3,7 +3,7 @@
     <div class="container bg-white shadow-lg px-4 py-3 col-9 rounded-4">
       <div class="row">
         <h2 class="pb-3 px-4 col-11" *ngIf="!sent">Dodaj novi dokument</h2>
-        <h2 class="pb-3 px-4 col-11">Da li su podaci ispravni?</h2>
+        <h2 class="pb-3 px-4 col-11" *ngIf="sent">Da li su podaci ispravni?</h2>
       </div>
       <div>
         <div *ngIf="!sent">
@@ -32,21 +32,21 @@
         <div class="row p-3" *ngIf="sent">
           <div class="form-group col-5">
             <label for="ime">Ime zaposlenog</label>
-            <input type="text" class="form-control" id="ime" name="ime">
+            <input type="text" class="form-control" id="ime" name="ime" [(ngModel)]="contract.employeeName">
           </div>
           <div class="col-1"></div>
           <div class="form-group col-5">
             <label for="prezime">Prezime zaposlenog</label>
-            <input type="text" class="form-control" id="prezime" name="prezime">
+            <input type="text" class="form-control" id="prezime" name="prezime" [(ngModel)]="contract.employeeSurname">
           </div>
           <div class="form-group col-5 pt-3">
             <label for="naziv">Naziv uprave</label>
-            <input type="text" class="form-control" id="naziv" name="naziv">
+            <input type="text" class="form-control" id="naziv" name="naziv" [(ngModel)]="contract.governmentName">
           </div>
           <div class="col-1"></div>
           <div class="form-group col-5 pt-3">
             <label for="nivo">Nivo uprave</label>
-            <input type="text" class="form-control" id="nivo" name="nivo">
+            <input type="text" class="form-control" id="nivo" name="nivo" [(ngModel)]="contract.levelOfAdministration">
           </div>
           <div class="form-group col-5 pt-3">
             <label for="naslov">Naslov</label>
@@ -55,14 +55,14 @@
           <div class="col-1"></div>
           <div class="form-group col-5 pt-3">
             <label for="adresa">Adresa</label>
-            <input type="text" class="form-control" id="adresa" name="adresa">
+            <input type="text" class="form-control" id="adresa" name="adresa" [(ngModel)]="contract.address">
           </div>
           <div class="form-group col-11 pt-3">
             <label for="sadrzaj">Sadrzaj</label>
-            <textarea type="text" class="form-control" id="sadrzaj" name="sadrzaj"></textarea>
+            <textarea type="text" class="form-control" id="sadrzaj" name="sadrzaj" [(ngModel)]="contract.content"></textarea>
           </div>
           <div class="row pt-4">
-            <button type="button" class="btn btn-lg" style="background-color: lightskyblue;color: white">Confirm</button>
+            <button type="button" class="btn btn-lg" style="background-color: lightskyblue;color: white" (click)="indexFile()">Confirm</button>
           </div>
         </div>
 

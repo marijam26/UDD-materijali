@@ -1,5 +1,6 @@
 package com.example.ddmdemo.service.interfaces;
 
+import com.example.ddmdemo.dto.AgencyContractValuesDTO;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -7,5 +8,5 @@ import org.springframework.web.multipart.MultipartFile;
 public interface IndexingService {
 
     String indexDocument(MultipartFile documentFile);
-    String parseDocumentContent(MultipartFile multipartPdfFile);
+    AgencyContractValuesDTO parseDocumentContent(MultipartFile multipartPdfFile);
 }

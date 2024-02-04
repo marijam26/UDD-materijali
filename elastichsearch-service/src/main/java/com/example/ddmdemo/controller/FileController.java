@@ -1,6 +1,7 @@
 package com.example.ddmdemo.controller;
 
 import com.example.ddmdemo.dto.AgencyContractDTO;
+import com.example.ddmdemo.dto.AgencyContractValuesDTO;
 import com.example.ddmdemo.dto.DummyDocumentFileDTO;
 import com.example.ddmdemo.dto.DummyDocumentFileResponseDTO;
 import com.example.ddmdemo.service.interfaces.FileService;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("api/file")
+@CrossOrigin(origins = "http://localhost:4200")
 @RequiredArgsConstructor
 @Slf4j
 public class FileController {
@@ -41,9 +43,13 @@ public class FileController {
     }
 
     @PostMapping("/parse")
-    public DummyDocumentFileResponseDTO parseDocumentFile(
-            @RequestBody AgencyContractDTO documentFile) {
-        var serverFilename = indexingService.parseDocumentContent(documentFile.getFile());
-        return new DummyDocumentFileResponseDTO(serverFilename);
+    public AgencyContractValuesDTO parseDocumentFile(
+            @ModelAttribute AgencyContractDTO documentFile) {
+        return indexingService.parseDocumentContent(documentFile.file());
+    }
+
+    @GetMapping("/test")
+    public boolean test() {
+        return true;
     }
 }

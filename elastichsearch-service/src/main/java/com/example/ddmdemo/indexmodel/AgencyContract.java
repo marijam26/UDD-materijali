@@ -40,6 +40,9 @@ public class AgencyContract {
     @Field(type = FieldType.Text, store = true, name = "address")
     private String address;
 
+    @Field(type = FieldType.Text, store = true, name = "fullContent")
+    private String fullContent;
+
     @GeoPointField
     @Field(store = true, name = "location")
     private GeoPoint location;

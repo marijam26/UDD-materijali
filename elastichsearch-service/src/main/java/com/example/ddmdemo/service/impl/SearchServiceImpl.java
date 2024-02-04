@@ -9,6 +9,7 @@ import com.example.ddmdemo.service.interfaces.SearchService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.elasticsearch.common.unit.Fuzziness;
+import org.elasticsearch.index.query.QueryBuilder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.elasticsearch.client.elc.NativeQuery;
@@ -16,6 +17,8 @@ import org.springframework.data.elasticsearch.client.elc.NativeQueryBuilder;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.core.SearchHitSupport;
 import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
+import org.springframework.data.elasticsearch.core.query.HighlightQuery;
+import org.springframework.data.elasticsearch.core.query.highlight.Highlight;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -51,10 +54,7 @@ public class SearchServiceImpl implements SearchService {
     private Query buildSimpleSearchQuery(List<String> tokens) {
         return BoolQuery.of(q -> q.must(mb -> mb.bool(b -> {
             tokens.forEach(token -> {
-                b.should(sb -> sb.match(
-                    m -> m.field("title").fuzziness(Fuzziness.ONE.asString()).query(token)));
-                b.should(sb -> sb.match(m -> m.field("content_sr").query(token)));
-                b.should(sb -> sb.match(m -> m.field("content_en").query(token)));
+                b.should(sb -> sb.match(m -> m.field("fullContent").query(token)));
             });
             return b;
         })))._toQuery();

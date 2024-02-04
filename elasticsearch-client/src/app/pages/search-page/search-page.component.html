@@ -1,0 +1,26 @@
+<div class="p-5 vh-100 hero-main" >
+  <div class="row">
+    <div class="container bg-white shadow-lg px-4 py-3 col-9 rounded-4">
+      <div class="row">
+        <h2 class="pb-3 px-4 col-11">Pretraga dokumenata</h2>
+      </div>
+      <div class="row">
+        <p><span style="font-weight: bold">Possible keywords:</span> employeeName, employeeSurname, governmentName, levelOfAdministration, address, content</p>
+        <p><span style="font-weight: bold">Possible operators:</span> AND, OR, NOT</p>
+        <p><span style="font-weight: bold">Example:</span> employeeName:'Marija' <span style="background-color: lightskyblue;border-radius: 5px;padding: 2px">AND</span> employeeSurname:'Milosevic' <span style="background-color: lightskyblue;border-radius: 5px;padding: 2px">OR</span> governmentName:'Neka Uprava'</p>
+        <div class="col-10">
+          <input type="text" class="form-control" [(ngModel)]="phrase" (change)="onChange()">
+        </div>
+        <div class="col-2">
+          <button type="button" class="btn " style="background-color: lightskyblue;color: white" (click)="search()">Search</button>
+        </div>
+        <div class="row py-4">
+          <h5 *ngIf="result.length != 0">Results</h5>
+          <ng-container *ngFor="let res of result">
+            <p>{{res['id']}}</p>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

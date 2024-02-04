@@ -1,5 +1,6 @@
 package com.example.ddmdemo.service.impl;
 
+import com.example.ddmdemo.dto.AgencyContractValuesDTO;
 import com.example.ddmdemo.exceptionhandling.exception.LoadingException;
 import com.example.ddmdemo.exceptionhandling.exception.StorageException;
 import com.example.ddmdemo.indexmodel.AgencyContract;
@@ -18,6 +19,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import lombok.RequiredArgsConstructor;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
@@ -45,21 +49,21 @@ public class IndexingServiceImpl implements IndexingService {
         var newEntity = new ContractTable();
         var newIndex = new AgencyContract();
 
+        AgencyContractValuesDTO valuesDTO = parseDocumentContent(documentFile);
+        newIndex.setEmployeeName(valuesDTO.getEmployeeName());
+        newIndex.setEmployeeSurname(valuesDTO.getEmployeeSurname());
+        newIndex.setGovernmentName(valuesDTO.getGovernmentName());
+        newIndex.setAddress(valuesDTO.getAddress());
+        newIndex.setLevelOfAdministration(valuesDTO.getLevelOfAdministration());
+        newIndex.setContent(valuesDTO.getContent());
+
         var title = Objects.requireNonNull(documentFile.getOriginalFilename()).split("\\.")[0];
-        // newIndex.setTitle(title);
         newEntity.setTitle(title);
 
         var documentContent = extractDocumentContent(documentFile);
-        newIndex.setContent(documentContent);
-//        if (detectLanguage(documentContent).equals("SR")) {
-//            newIndex.setContentSr(documentContent);
-//        } else {
-//            newIndex.setContentEn(documentContent);
-//        }
-        newEntity.setTitle(title);
+        newIndex.setFullContent(documentContent);
 
         var serverFilename = fileService.store(documentFile, UUID.randomUUID().toString());
-        //newIndex.setServerFilename(serverFilename);
         newEntity.setServerFilename(serverFilename);
 
         newEntity.setMimeType(detectMimeType(documentFile));
@@ -72,19 +76,81 @@ public class IndexingServiceImpl implements IndexingService {
     }
 
     @Override
-    public String parseDocumentContent(MultipartFile multipartPdfFile) {
+    public AgencyContractValuesDTO parseDocumentContent(MultipartFile multipartPdfFile) {
         String documentContent;
+        AgencyContractValuesDTO values;
         try (var pdfFile = multipartPdfFile.getInputStream()) {
             var pdDocument = PDDocument.load(pdfFile);
             var textStripper = new PDFTextStripper();
             documentContent = textStripper.getText(pdDocument);
-            System.out.println(documentContent);
+            values = extractData(documentContent);
             pdDocument.close();
         } catch (IOException e) {
             throw new LoadingException("Error while trying to load PDF file content.");
         }
 
-        return documentContent;
+        return values;
+    }
+
+    private AgencyContractValuesDTO extractData(String text) {
+        AgencyContractValuesDTO values = new AgencyContractValuesDTO();
+
+        String governmentNameRegex = "Uprava\\s+za\\s+(.*)";
+        Pattern pattern = Pattern.compile(governmentNameRegex);
+        Matcher matcher = pattern.matcher(text);
+
+        if (matcher.find()) {
+            System.out.println(matcher.group());
+            String name = matcher.group().split("Uprava za")[1];
+            values.setGovernmentName(name.trim());
+        }
+
+        String levelRegex = "Nivo\\s+uprave:\\s+(.*)";
+        pattern = Pattern.compile(levelRegex);
+        matcher = pattern.matcher(text);
+
+        if (matcher.find()) {
+            System.out.println(matcher.group());
+            String name = matcher.group().split("Nivo uprave:")[1];
+            values.setLevelOfAdministration(name.trim());
+
+        }
+
+        String adressRegex = values.getLevelOfAdministration()+",\\s+(.*)\\(format";
+        pattern = Pattern.compile(adressRegex);
+        matcher = pattern.matcher(text);
+
+        if (matcher.find()) {
+            System.out.println(matcher.group());
+            String name = "";
+            if(matcher.group().contains(")")){
+                name = matcher.group().split("\\)")[1];
+            }else{
+                name = matcher.group().split(",")[1];
+            }
+
+            values.setAddress(name.split("\\(")[0].trim());
+        }
+
+        String[] lines = text.split("\r\n \r\n");
+        values.setContent(lines[2].trim());
+
+//        String[] words = values.getContent().split(" ");
+//        String lastWord = words[words.length-1];
+//        String nameRegex = lastWord+"\r\n\\s+(.*)_______________________";
+//        pattern = Pattern.compile(nameRegex);
+//        matcher = pattern.matcher(text);
+//
+//        if (matcher.find()) {
+//            System.out.println(matcher.group());
+//            //String name = matcher.group().split(",")[1];
+//            values.setEmployeeName(matcher.group());
+//            values.setEmployeeSurname("p");
+//        }
+        String[] names = lines[3].split("  ");
+        values.setEmployeeName(names[4].split(" ")[1]);
+        values.setEmployeeSurname(names[4].split(" ")[2]);
+        return values;
     }
 
     private String extractDocumentContent(MultipartFile multipartPdfFile) {
@@ -101,14 +167,6 @@ public class IndexingServiceImpl implements IndexingService {
         return documentContent;
     }
 
-    private String detectLanguage(String text) {
-        var detectedLanguage = languageDetector.detect(text).getLanguage().toUpperCase();
-        if (detectedLanguage.equals("HR")) {
-            detectedLanguage = "SR";
-        }
-
-        return detectedLanguage;
-    }
 
     private String detectMimeType(MultipartFile file) {
         var contentAnalyzer = new Tika();

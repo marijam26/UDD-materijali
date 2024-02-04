@@ -1,24 +1,22 @@
 import { Injectable } from '@angular/core';
-import {HttpClient,HttpHeaders} from "@angular/common/http";
+import {HttpClient, HttpHeaders} from "@angular/common/http";
 
 @Injectable({
   providedIn: 'root'
 })
-export class FileService {
+export class IndexService {
 
   constructor(private _http: HttpClient) { }
 
-  url = 'http://localhost:8081/api/file';
+  url = 'http://localhost:8081/api/index';
 
-  parseFile(file:File){
+  indexFile(file:File){
     const fd = new FormData();
     fd.append('file', file);
-    const newUrl = this.url + '/parse';
-    return this._http.post<any>(newUrl, fd, {
+    return this._http.post<any>(this.url, fd, {
       headers: new HttpHeaders({
         'Access-Control-Allow-Origin': '*',
       }),
     });
   }
-
 }
