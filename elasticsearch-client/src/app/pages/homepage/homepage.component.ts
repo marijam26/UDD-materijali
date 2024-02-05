@@ -23,23 +23,28 @@ export class HomepageComponent {
   }
 
   sendFile(){
-    this.sent=true;
-    console.log(this.file);
-    if(this.file){
-      this.fileService.parseFile(this.file).subscribe({
-        next:(data) => {
-          this.contract = data;
-          console.log(this.contract)
-        },error:(err) => {
-          console.log(err)
-        }
-      });
+    if(this.selected == 'Ugovor'){
+      this.sent=true;
+      console.log(this.file);
+      if(this.file){
+        this.fileService.parseFile(this.file).subscribe({
+          next:(data) => {
+            this.contract = data;
+            console.log(this.contract)
+          },error:(err) => {
+            console.log(err)
+          }
+        });
+      }
+    }else{
+      this.indexFile();
     }
+
   }
 
   indexFile(){
     if(this.file){
-      this.indexService.indexFile(this.file).subscribe({
+      this.indexService.indexFile(this.file,this.selected.toLowerCase()).subscribe({
         next:(data) => {
           console.log(data)
           alert('ok');

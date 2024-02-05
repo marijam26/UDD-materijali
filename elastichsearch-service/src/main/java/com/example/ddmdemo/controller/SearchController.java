@@ -1,5 +1,7 @@
 package com.example.ddmdemo.controller;
 
+import com.example.ddmdemo.dto.LocationDTO;
+import com.example.ddmdemo.dto.ResultDTO;
 import com.example.ddmdemo.dto.SearchQueryDTO;
 import com.example.ddmdemo.indexmodel.AgencyContract;
 import com.example.ddmdemo.indexmodel.DummyIndex;
@@ -18,14 +20,20 @@ public class SearchController {
     private final SearchService searchService;
 
     @PostMapping("/simple")
-    public Page<AgencyContract> simpleSearch(@RequestBody SearchQueryDTO simpleSearchQuery,
-                                             Pageable pageable) {
+    public ResultDTO simpleSearch(@RequestBody SearchQueryDTO simpleSearchQuery,
+                                  Pageable pageable) {
         return searchService.simpleSearch(simpleSearchQuery.getKeywords(), pageable);
     }
 
     @PostMapping("/advanced")
-    public Page<AgencyContract> advancedSearch(@RequestBody SearchQueryDTO advancedSearchQuery,
+    public ResultDTO advancedSearch(@RequestBody SearchQueryDTO advancedSearchQuery,
                                            Pageable pageable) {
         return searchService.advancedSearch(advancedSearchQuery.getKeywords(), pageable);
+    }
+
+    @PostMapping("/geo")
+    public ResultDTO geoSearch(@RequestBody LocationDTO locationDTO,
+                                               Pageable pageable) {
+        return searchService.geoSearch(locationDTO, pageable);
     }
 }

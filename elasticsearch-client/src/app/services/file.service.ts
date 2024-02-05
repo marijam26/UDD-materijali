@@ -21,4 +21,12 @@ export class FileService {
     });
   }
 
+  downloadFile(path:string){
+    const newUrl = this.url + '/download/'+path;
+    return this._http.get<Blob>(newUrl, {
+      headers: new HttpHeaders({'Content-Type': 'application/json' }),
+      responseType: 'blob' as 'json'
+    })
+  }
+
 }

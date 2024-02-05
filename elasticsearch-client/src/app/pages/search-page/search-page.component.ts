@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import {SearchService} from "../../services/search.service";
+import {LocationDTO} from "../../models/location";
+import {FileService} from "../../services/file.service";
 
 @Component({
   selector: 'app-search-page',
@@ -9,9 +11,11 @@ import {SearchService} from "../../services/search.service";
 export class SearchPageComponent {
   phrase:string='';
   tokens:string[]=[];
-  result=[]
+  result = []
+  highlighters = [];
+  location:LocationDTO = new LocationDTO();
 
-  constructor(private searchService:SearchService) {
+  constructor(private searchService:SearchService, private fileService:FileService) {
   }
 
   tokenizeQuery(query: string): string[] {
@@ -71,8 +75,9 @@ export class SearchPageComponent {
       this.searchService.advancedSearchFile(this.tokens).subscribe(
         {
           next:(data) => {
-            console.log(data.content)
-            this.result = data.content
+            console.log(data)
+            this.result = data.pages.content
+            this.highlighters = data.highlighters;
             alert('ok');
           }, error:(err) => {
             console.log(err)
@@ -83,6 +88,8 @@ export class SearchPageComponent {
         {
           next:(data) => {
             console.log(data)
+            this.result = data.pages.content;
+            this.highlighters = data.highlighters;
             alert('ok');
           }, error:(err) => {
             console.log(err)
@@ -91,9 +98,30 @@ export class SearchPageComponent {
     }
   }
 
-  onChange(){
-    if (this.phrase.split(' ').includes('AND')){
+  searchGeo(){
+    this.searchService.geoSearchFile(this.location).subscribe(
+      {
+        next:(data) => {
+          console.log(data)
+          this.result = data.pages.content;
+          this.highlighters = data.highlighters;
+          alert('ok');
+        }, error:(err) => {
+          console.log(err)
+        }
+      }
+    );
+  }
 
-    }
+  open(path:string){
+    this.fileService.downloadFile(path).subscribe(data => {
+      console.log(data)
+      const url = window.URL.createObjectURL(new Blob([data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", path);
+      document.body.appendChild(link);
+      link.click();
+    });
   }
 }

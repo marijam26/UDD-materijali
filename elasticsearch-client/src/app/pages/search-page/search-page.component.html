@@ -9,15 +9,33 @@
         <p><span style="font-weight: bold">Possible operators:</span> AND, OR, NOT</p>
         <p><span style="font-weight: bold">Example:</span> employeeName:'Marija' <span style="background-color: lightskyblue;border-radius: 5px;padding: 2px">AND</span> employeeSurname:'Milosevic' <span style="background-color: lightskyblue;border-radius: 5px;padding: 2px">OR</span> governmentName:'Neka Uprava'</p>
         <div class="col-10">
-          <input type="text" class="form-control" [(ngModel)]="phrase" (change)="onChange()">
+          <input type="text" class="form-control" [(ngModel)]="phrase">
         </div>
         <div class="col-2">
-          <button type="button" class="btn " style="background-color: lightskyblue;color: white" (click)="search()">Search</button>
+          <button type="button" class="btn " style="background-color: dodgerblue;color: white" (click)="search()">Search</button>
+        </div>
+        <div class="pt-3">
+          <h4>Geolocation search</h4>
+          <div class="row pt-2">
+            <div class="form-group col-3">
+              <label for="grad">Grad/Adresa</label>
+              <input type="text" class="form-control" id="grad" name="grad" [(ngModel)]="location.city" >
+            </div>
+            <div class="form-group col-2">
+              <label for="razdaljina">Razdaljina</label>
+              <input type="number" class="form-control" id="razdaljina" name="razdaljina" [(ngModel)]="location.radius" >
+            </div>
+            <div class="col-2 pt-4">
+              <button type="button" class="btn " style="background-color: dodgerblue;color: white" (click)="searchGeo()">Search</button>
+            </div>
+          </div>
+
         </div>
         <div class="row py-4">
           <h5 *ngIf="result.length != 0">Results</h5>
-          <ng-container *ngFor="let res of result">
-            <p>{{res['id']}}</p>
+          <ng-container *ngFor="let res of result; let i = index">
+            <a href="javascript:void(0);" (click)="open(res['path'])">{{res['title']}}.pdf</a>
+            <p><em>{{this.highlighters[i]}}</em></p>
           </ng-container>
         </div>
       </div>

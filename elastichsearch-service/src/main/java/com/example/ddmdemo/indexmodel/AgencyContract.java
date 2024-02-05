@@ -13,11 +13,14 @@ import org.springframework.data.elasticsearch.core.geo.GeoPoint;
 @Getter
 @Setter
 @NoArgsConstructor
-@Document(indexName = "contracts")
+@Document(indexName = "contract")
 public class AgencyContract {
 
     @Id
     private String id;
+
+    @Field(type = FieldType.Text, store = true, name = "title")
+    private String title;
 
     @Field(type = FieldType.Text, store = true, name = "employeeName")
     private String employeeName;
